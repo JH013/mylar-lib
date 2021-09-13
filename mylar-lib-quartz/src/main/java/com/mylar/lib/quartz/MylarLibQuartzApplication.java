@@ -1,7 +1,10 @@
 package com.mylar.lib.quartz;
 
+import com.mylar.lib.quartz.core.LocalConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 
 /**
  * Quartz
@@ -13,7 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MylarLibQuartzApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MylarLibQuartzApplication.class, args);
+
+        ConfigurableApplicationContext context = SpringApplication.run(MylarLibQuartzApplication.class, args);
+
+        LocalConfig.environment = context.getBean(Environment.class);
     }
 
 }

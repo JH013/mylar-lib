@@ -1,4 +1,4 @@
-package com.mylar.lib.quartz.basic.simple;
+package com.mylar.lib.quartz.core.basic.simple;
 
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.mylar.lib.quartz.basic.cron;
+package com.mylar.lib.quartz.core.basic.cron;
 
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
