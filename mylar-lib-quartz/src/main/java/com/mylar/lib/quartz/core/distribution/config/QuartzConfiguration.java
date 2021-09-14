@@ -58,7 +58,7 @@ public class QuartzConfiguration {
         schedulerFactoryBean.setAutoStartup(true);
 
         // 设置数据源，使用与项目统一数据源
-        schedulerFactoryBean.setDataSource(dataSource);
+        // schedulerFactoryBean.setDataSource(dataSource);
 
         // 设置上下文spring bean name
         schedulerFactoryBean.setApplicationContextSchedulerContextKey("applicationContext");
