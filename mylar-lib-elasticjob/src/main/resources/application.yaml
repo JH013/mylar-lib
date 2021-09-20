@@ -1,0 +1,6 @@
+elasticjob:
+  datasource:
+    url: jdbc:mysql://localhost:3306/my_elastic_job?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true&nullCatalogMeansCurrent=true
+    username: root
+    password: 1qaz2wsxE
+    driver-class-name: com.mysql.jdbc.Driver
