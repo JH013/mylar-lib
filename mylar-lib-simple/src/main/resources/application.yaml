@@ -1,2 +1,13 @@
 server:
   port: 5001
+
+
+address:
+  country: China
+  province: ZheJiang
+  city: HangZhou
+
+birthday:
+  year: 1994
+  month: 9
+  day: 2
