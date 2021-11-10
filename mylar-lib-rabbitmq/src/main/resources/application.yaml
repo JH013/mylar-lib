@@ -1,6 +1,14 @@
-simple:
-  host: 111.229.159.137
+my:
+  host: 47.97.67.90
   port: 35672
   username: guest
   password: guest
   virtual-host: /
+  listener:
+    simple:
+      concurrency: 1
+      max-concurrency: 3
+      prefetch: 6
+
+server:
+  port: 9021
