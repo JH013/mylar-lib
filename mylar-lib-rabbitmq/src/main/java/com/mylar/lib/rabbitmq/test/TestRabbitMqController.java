@@ -3,6 +3,7 @@ package com.mylar.lib.rabbitmq.test;
 import com.mylar.lib.rabbitmq.component.data.RabbitMessage;
 import com.mylar.lib.rabbitmq.test.plugins.DemoRabbitSender;
 import com.mylar.lib.rabbitmq.test.plugins.MyRabbitHandler;
+import com.mylar.lib.rabbitmq.test.plugins.XRabbitHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,9 @@ public class TestRabbitMqController {
     @Autowired
     private DemoRabbitSender demoRabbitSender;
 
+    @Autowired
+    private XRabbitHandler xRabbitHandler;
+
     @RequestMapping(value = "/sendMy")
     public String sendMy(String message) throws Exception {
 
@@ -32,6 +36,13 @@ public class TestRabbitMqController {
     public String sendDemo(String message) throws Exception {
 
         this.demoRabbitSender.send(new RabbitMessage(message));
+        return "success";
+    }
+
+    @RequestMapping(value = "/sendX")
+    public String sendX(String message) throws Exception {
+
+        this.xRabbitHandler.send(new RabbitMessage(message));
         return "success";
     }
 
