@@ -1,4 +1,4 @@
-package com.mylar.lib.rabbitmq.component.core;
+package com.mylar.lib.rabbitmq.component.configuration;
 
 import com.mylar.lib.rabbitmq.component.register.RabbitReceiverRegister;
 import com.mylar.lib.rabbitmq.component.register.RabbitSenderRegister;
@@ -49,7 +49,6 @@ public class RabbitStarter implements EnvironmentAware, ApplicationContextAware,
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-
 
     @Override
     public void afterSingletonsInstantiated() {

@@ -1,12 +1,12 @@
 package com.mylar.lib.rabbitmq.component.core;
 
-import com.mylar.lib.rabbitmq.component.constant.RabbitConstant;
+import com.mylar.lib.rabbitmq.component.data.RabbitMessage;
+import com.mylar.lib.rabbitmq.component.data.RabbitSenderDelegate;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -25,22 +25,20 @@ public abstract class AbstractRabbitSender {
     /**
      * 发送消息
      *
-     * @param memberName 会员名
-     * @param message    消息体
+     * @param exchange      交换机
+     * @param routingKey    路由键
+     * @param rabbitMessage 消息
      */
-    public void send(String memberName, String message) {
+    public void send(String exchange, String routingKey, RabbitMessage rabbitMessage) {
 
-        // 交换机 & 路由键
-        String exchange = delegate.getExchange();
-        String routingKey = delegate.getRoutingKey();
+        // 消息体
+        String messageBody = rabbitMessage.getMessageBody();
 
-        // MQ消息属性，设置头部信息
-        MessageProperties messageProperties = new MessageProperties();
-        Map<String, Object> headers = messageProperties.getHeaders();
-        headers.put(RabbitConstant.HEADER_KEY_MEMBER_NAME, memberName);
+        // 消息属性
+        MessageProperties messageProperties = rabbitMessage.getMessageProperties();
 
         // MQ消息，附加头部信息
-        Message mqMessage = new Message(message.getBytes(StandardCharsets.UTF_8), messageProperties);
+        Message mqMessage = new Message(messageBody.getBytes(StandardCharsets.UTF_8), messageProperties);
 
         // 关联数据，添加消息进去，用于发送确认失败后处理
         CorrelationData correlationData = new CorrelationData();
@@ -48,6 +46,15 @@ public abstract class AbstractRabbitSender {
         correlationData.setReturnedMessage(mqMessage);
 
         this.delegate.getRabbitTemplate().send(exchange, routingKey, mqMessage, correlationData);
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param rabbitMessage 消息
+     */
+    public void send(RabbitMessage rabbitMessage) {
+        this.send(this.delegate.getExchange(), this.delegate.getRoutingKey(), rabbitMessage);
     }
 
     /**

@@ -1,12 +1,12 @@
 package com.mylar.lib.rabbitmq.component.core;
 
-import com.mylar.lib.rabbitmq.component.strategy.DefaultRabbitSendFailedStrategy;
-import com.mylar.lib.rabbitmq.component.strategy.IRabbitSendFailedStrategy;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
 /**
+ * RabbitMQ参数
+ *
  * @author wangz
  * @date 2021/11/10 0010 20:29
  */
@@ -28,21 +28,21 @@ public @interface RabbitParameter {
      *
      * @return 交换机
      */
-    String exchange();
+    String exchange() default "";
 
     /**
      * 路由键
      *
      * @return 路由键
      */
-    String routingKey();
+    String routingKey() default "";
 
     /**
      * 队列名
      *
      * @return 队列名
      */
-    String queue();
+    String queue() default "";
 
     /**
      * 消费者数量
@@ -64,12 +64,4 @@ public @interface RabbitParameter {
      * @return 预处理数量
      */
     String prefetch() default "";
-
-    /**
-     * 发送失败策略
-     *
-     * @return 发送失败策略
-     */
-    Class<? extends IRabbitSendFailedStrategy> sendFailedStrategy() default DefaultRabbitSendFailedStrategy.class;
-
 }

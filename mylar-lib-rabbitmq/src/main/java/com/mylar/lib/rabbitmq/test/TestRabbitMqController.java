@@ -1,8 +1,8 @@
 package com.mylar.lib.rabbitmq.test;
 
-import com.mylar.lib.rabbitmq.test.plugins.DemoRabbitHandler;
-import com.mylar.lib.rabbitmq.test.plugins.DemoRabbitHandler2;
-import com.mylar.lib.rabbitmq.test.plugins.DemoRabbitHandler3;
+import com.mylar.lib.rabbitmq.component.data.RabbitMessage;
+import com.mylar.lib.rabbitmq.test.plugins.DemoRabbitSender;
+import com.mylar.lib.rabbitmq.test.plugins.MyRabbitHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,32 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestRabbitMqController {
 
     @Autowired
-    private DemoRabbitHandler demoRabbitHandler;
+    private MyRabbitHandler myRabbitHandler;
 
     @Autowired
-    private DemoRabbitHandler2 demoRabbitHandler2;
+    private DemoRabbitSender demoRabbitSender;
 
-    @Autowired
-    private DemoRabbitHandler3 demoRabbitHandler3;
+    @RequestMapping(value = "/sendMy")
+    public String sendMy(String message) throws Exception {
 
-    @RequestMapping(value = "/send")
-    public String send(String memberName, String message) throws Exception {
-
-        this.demoRabbitHandler.send(memberName, message);
+        this.myRabbitHandler.send(new RabbitMessage(message));
         return "success";
     }
 
-    @RequestMapping(value = "/send2")
-    public String send2(String memberName, String message) throws Exception {
+    @RequestMapping(value = "/sendDemo")
+    public String sendDemo(String message) throws Exception {
 
-        this.demoRabbitHandler2.send(memberName, message);
+        this.demoRabbitSender.send(new RabbitMessage(message));
         return "success";
     }
 
-    @RequestMapping(value = "/send3")
-    public String send3(String memberName, String message) throws Exception {
-
-        this.demoRabbitHandler3.send(memberName, message);
-        return "success";
-    }
 }

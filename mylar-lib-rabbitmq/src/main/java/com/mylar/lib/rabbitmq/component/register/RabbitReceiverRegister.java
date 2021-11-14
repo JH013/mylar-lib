@@ -1,7 +1,7 @@
 package com.mylar.lib.rabbitmq.component.register;
 
 import com.mylar.lib.rabbitmq.component.core.IRabbitReceiver;
-import com.mylar.lib.rabbitmq.component.core.RabbitConnectionKey;
+import com.mylar.lib.rabbitmq.component.data.RabbitConnectionKey;
 import com.mylar.lib.rabbitmq.component.core.RabbitParameter;
 import com.mylar.lib.rabbitmq.component.constant.RabbitConstant;
 import com.mylar.lib.rabbitmq.component.utils.RabbitConnectionFactoryUtil;
@@ -10,6 +10,7 @@ import com.mylar.lib.rabbitmq.component.utils.RabbitPropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer;
@@ -21,10 +22,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * RabbitMQ消费者注册类

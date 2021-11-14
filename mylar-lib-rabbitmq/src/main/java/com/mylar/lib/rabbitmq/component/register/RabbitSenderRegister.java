@@ -1,12 +1,9 @@
 package com.mylar.lib.rabbitmq.component.register;
 
-import com.mylar.lib.rabbitmq.component.core.AbstractRabbitSender;
-import com.mylar.lib.rabbitmq.component.core.RabbitConnectionKey;
-import com.mylar.lib.rabbitmq.component.core.RabbitParameter;
-import com.mylar.lib.rabbitmq.component.core.RabbitSenderDelegate;
 import com.mylar.lib.rabbitmq.component.constant.RabbitConstant;
-import com.mylar.lib.rabbitmq.component.strategy.DefaultRabbitSendFailedStrategy;
-import com.mylar.lib.rabbitmq.component.strategy.IRabbitSendFailedStrategy;
+import com.mylar.lib.rabbitmq.component.core.*;
+import com.mylar.lib.rabbitmq.component.data.RabbitConnectionKey;
+import com.mylar.lib.rabbitmq.component.data.RabbitSenderDelegate;
 import com.mylar.lib.rabbitmq.component.utils.RabbitConnectionFactoryUtil;
 import com.mylar.lib.rabbitmq.component.utils.RabbitPropertiesUtil;
 import org.slf4j.Logger;
@@ -20,6 +17,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * RabbitMQ生产者注册类
@@ -109,10 +107,14 @@ public class RabbitSenderRegister extends AbstractRabbitRegister {
             rabbitTemplate = new RabbitTemplate(connectionFactory);
             rabbitTemplate.setMandatory(true);
 
-            // 发送失败策略：优先取缓存
-            IRabbitSendFailedStrategy sendFailedStrategy = this.getSendFailedStrategy(rabbitParameter.sendFailedStrategy());
-            rabbitTemplate.setConfirmCallback(sendFailedStrategy);
-            rabbitTemplate.setReturnsCallback(sendFailedStrategy);
+            // 设置回调：优先取缓存
+            IRabbitSenderCallback rabbitCallback = this.getRabbitCallback(prefix);
+            if (rabbitCallback != null) {
+                rabbitTemplate.setConfirmCallback(rabbitCallback);
+                rabbitTemplate.setReturnsCallback(rabbitCallback);
+                rabbitTemplate.execute(rabbitCallback);
+            }
+
             this.rabbitElementCache.setRabbitTemplate(prefix, rabbitTemplate);
         }
 
@@ -120,23 +122,39 @@ public class RabbitSenderRegister extends AbstractRabbitRegister {
     }
 
     /**
-     * 获取发送失败策略
+     * 获取回调实例
      *
-     * @param clazz 类型
-     * @return 发送失败策略实例
+     * @param prefix 前缀
+     * @return 回调实例
      */
-    private IRabbitSendFailedStrategy getSendFailedStrategy(Class<? extends IRabbitSendFailedStrategy> clazz) {
-        try {
-            IRabbitSendFailedStrategy sendFailedStrategy = this.rabbitElementCache.getSendFailedStrategy(clazz);
-            if (sendFailedStrategy == null) {
-                sendFailedStrategy = clazz.newInstance();
-                this.rabbitElementCache.setSendFailedStrategy(clazz, sendFailedStrategy);
+    private IRabbitSenderCallback getRabbitCallback(String prefix) {
+
+        // 优先取缓存
+        IRabbitSenderCallback cacheRabbitCallback = this.rabbitElementCache.getRabbitCallback(prefix);
+        if (cacheRabbitCallback != null) {
+            return cacheRabbitCallback;
+        }
+
+        // 获取所有回调实例
+        Map<String, IRabbitSenderCallback> allCallbacks = this.applicationContext.getBeansOfType(IRabbitSenderCallback.class);
+        if (allCallbacks.size() == 0) {
+            return null;
+        }
+
+        for (IRabbitSenderCallback callback : allCallbacks.values()) {
+
+            // 获取注解
+            Class<?> clazz = AopUtils.getTargetClass(callback);
+            RabbitParameter rabbitParameter = AnnotationUtils.findAnnotation(clazz, RabbitParameter.class);
+            if (rabbitParameter == null || !Objects.equals(rabbitParameter.prefix(), prefix)) {
+                continue;
             }
 
-            return sendFailedStrategy;
-        } catch (Exception e) {
-            logger.error("init send failed strategy failed, error message: ", e);
-            return new DefaultRabbitSendFailedStrategy();
+            // 缓存并返回
+            this.rabbitElementCache.setRabbitCallback(prefix, callback);
+            return callback;
         }
+
+        return null;
     }
 }

@@ -12,11 +12,11 @@ import org.springframework.amqp.core.Message;
  */
 @RabbitParameter(
         prefix = "my",
-        exchange = "test-exchange",
-        routingKey = "test-routing-key-2",
-        queue = "test-queue-2"
+        exchange = "exchange.my",
+        routingKey = "routing.key.my",
+        queue = "queue.my"
 )
-public class DemoRabbitHandler2 extends AbstractRabbitSender implements IRabbitReceiver {
+public class MyRabbitHandler extends AbstractRabbitSender implements IRabbitReceiver {
 
     @Override
     public void onMessage(Message message, Channel channel) throws Exception {

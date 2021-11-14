@@ -1,6 +1,6 @@
 package com.mylar.lib.rabbitmq.component.register;
 
-import com.mylar.lib.rabbitmq.component.core.RabbitElementCache;
+import com.mylar.lib.rabbitmq.component.configuration.RabbitElementCache;
 import com.mylar.lib.rabbitmq.component.constant.RabbitConstant;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
