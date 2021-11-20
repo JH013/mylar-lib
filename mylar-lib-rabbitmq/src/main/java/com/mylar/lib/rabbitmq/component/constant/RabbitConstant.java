@@ -23,9 +23,4 @@ public class RabbitConstant {
      */
     public static final String SCOPE_RECEIVER = "L";
 
-    /**
-     * 消息头KEY：会员名
-     */
-    public final static String HEADER_KEY_MEMBER_NAME = "MEMBER_NAME";
-
 }

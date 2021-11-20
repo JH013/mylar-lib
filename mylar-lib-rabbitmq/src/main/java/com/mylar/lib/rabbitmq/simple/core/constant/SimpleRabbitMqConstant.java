@@ -11,7 +11,7 @@ public class SimpleRabbitMqConstant {
     /**
      * MQ连接配置前缀
      */
-    public final static String CONNECTION_CONFIG_PREFIX = "my";
+    public final static String CONNECTION_CONFIG_PREFIX = "simple";
 
     /**
      * 连接范围：生产者 P 接收者 L

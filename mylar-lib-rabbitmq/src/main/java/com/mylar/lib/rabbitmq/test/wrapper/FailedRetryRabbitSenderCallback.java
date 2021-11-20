@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 回调-失败重试
+ *
  * @author wangz
  * @date 2021/11/14 0014 22:57
  */
-@RabbitParameter(prefix = "my")
+@RabbitParameter(prefix = MyConstant.PREFIX_MY)
 public class FailedRetryRabbitSenderCallback implements IRabbitSenderCallback {
 
     /**

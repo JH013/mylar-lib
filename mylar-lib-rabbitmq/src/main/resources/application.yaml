@@ -1,14 +1,26 @@
-my:
+server:
+  port: 9021
+
+simple:
   host: 47.97.67.90
   port: 35672
   username: guest
   password: guest
-  virtual-host: /
+  virtual-host: simple
   listener:
     simple:
       concurrency: 1
       max-concurrency: 3
       prefetch: 6
 
-server:
-  port: 9021
+my:
+  host: 47.97.67.90
+  port: 35672
+  username: guest
+  password: guest
+  virtual-host: my
+  listener:
+    simple:
+      concurrency: 1
+      max-concurrency: 3
+      prefetch: 6
