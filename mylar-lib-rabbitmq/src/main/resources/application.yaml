@@ -2,7 +2,7 @@ server:
   port: 9021
 
 simple:
-  host: 47.97.67.90
+  host: 0.0.0.0
   port: 35672
   username: guest
   password: guest
@@ -14,7 +14,7 @@ simple:
       prefetch: 6
 
 my:
-  host: 47.97.67.90
+  host: 0.0.0.0
   port: 35672
   username: guest
   password: guest
