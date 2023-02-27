@@ -31,6 +31,7 @@ public class RedisAggregateOperations implements IRedisAggregateOperations {
         this.setOperations = new RedisSetSubOperations(redisTemplateCache);
         this.sortSetOperations = new RedisSortSetSubOperations(redisTemplateCache);
         this.scriptOperations = new RedisScriptSubOperations(redisTemplateCache);
+        this.hashExpireOperations = new RedisHashExpireSubOperations(redisTemplateCache);
     }
 
     // region 变量
@@ -69,6 +70,11 @@ public class RedisAggregateOperations implements IRedisAggregateOperations {
      * Redis Sub Operations - Lua Script
      */
     private final IRedisScriptSubOperations scriptOperations;
+
+    /**
+     * Redis Sub Operations - Hash Expire
+     */
+    private final IRedisHashExpireSubOperations hashExpireOperations;
 
     // endregion
 
@@ -142,6 +148,16 @@ public class RedisAggregateOperations implements IRedisAggregateOperations {
     @Override
     public IRedisScriptSubOperations opsScript() {
         return this.scriptOperations;
+    }
+
+    /**
+     * 获取 Redis Sub Operations - Hash Expire
+     *
+     * @return 结果
+     */
+    @Override
+    public IRedisHashExpireSubOperations opsHashExpire() {
+        return this.hashExpireOperations;
     }
 
     // endregion

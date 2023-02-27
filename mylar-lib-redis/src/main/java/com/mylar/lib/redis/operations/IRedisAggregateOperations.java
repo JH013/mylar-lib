@@ -58,4 +58,11 @@ public interface IRedisAggregateOperations {
      * @return 结果
      */
     IRedisScriptSubOperations opsScript();
+
+    /**
+     * 获取 Redis Sub Operations - Hash Expire
+     *
+     * @return 结果
+     */
+    IRedisHashExpireSubOperations opsHashExpire();
 }

@@ -1,4 +1,4 @@
-package com.mylar.lib.redis.ext;
+package com.mylar.lib.redis.script;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -55,12 +55,12 @@ public class ListRedisScript {
     // region 变量 & 常量
 
     /**
-     * lua脚本对象集合
+     * lua 脚本对象集合
      */
     private Map<String, DefaultRedisScript<?>> redisScripts;
 
     /**
-     * lua 脚本路径（List 缓存全量同步）
+     * lua 脚本路径 - List 缓存全量同步
      */
     private static final String LUA_LIST_SYNC_FULL = "scripts/list/list_sync_full.lua";
 
@@ -69,10 +69,10 @@ public class ListRedisScript {
     // region 公共方法
 
     /**
-     * lua脚本对象,过期hash批量查询
+     * lua 脚本 - List 缓存全量同步
      */
     public DefaultRedisScript<?> luaListSyncFull() {
-        return redisScripts.get(LUA_LIST_SYNC_FULL);
+        return this.redisScripts.get(LUA_LIST_SYNC_FULL);
     }
 
     // endregion
@@ -80,18 +80,18 @@ public class ListRedisScript {
     // region 私有方法
 
     /**
-     * 初始lua
+     * 初始 lua
      */
     protected void initAllScript() {
-        redisScripts = new HashMap<>();
-        initScript(LUA_LIST_SYNC_FULL, Integer.class);
+        this.redisScripts = new HashMap<>();
+        this.initScript(LUA_LIST_SYNC_FULL, Integer.class);
     }
 
     /**
-     * 初始单个lua
+     * 初始单个 lua
      */
-    protected void initScript(String script, Class<?> resultType) {
-        DefaultRedisScript redisScript = new DefaultRedisScript<>();
+    protected <T> void initScript(String script, Class<T> resultType) {
+        DefaultRedisScript<T> redisScript = new DefaultRedisScript<>();
         redisScript.setLocation(new ClassPathResource(script));
         redisScript.setResultType(resultType);
         redisScripts.put(script, redisScript);

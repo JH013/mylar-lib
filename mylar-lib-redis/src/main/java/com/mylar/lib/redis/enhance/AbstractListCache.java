@@ -2,7 +2,7 @@ package com.mylar.lib.redis.enhance;
 
 import com.mylar.lib.base.utils.ExtUtils;
 import com.mylar.lib.base.utils.JsonUtils;
-import com.mylar.lib.redis.ext.ListRedisScript;
+import com.mylar.lib.redis.script.ListRedisScript;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.util.CollectionUtils;
 
