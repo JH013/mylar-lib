@@ -1,5 +1,5 @@
 server:
-  port: 8092
+  port: 8080
 my:
   redis:
     host: 47.97.67.90

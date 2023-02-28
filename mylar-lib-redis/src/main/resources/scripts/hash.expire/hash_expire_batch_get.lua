@@ -90,7 +90,16 @@ local ret = {}
 for i = 3, len, 1 do
 
     -- 获取Hash值
-    ret[i - 2] = hashGet(currentCacheKey, beforeCacheKey, currentTime, ARGV[i])
+    -- ret[i - 2] = hashGet(currentCacheKey, beforeCacheKey, currentTime, ARGV[i])
+
+    -- 获取Hash值
+    local hValue = hashGet(currentCacheKey, beforeCacheKey, currentTime, ARGV[i])
+    if hValue == nil then
+        table.insert(ret, false)
+    else
+        table.insert(ret, hValue)
+    end
+
 end
 return ret
 
