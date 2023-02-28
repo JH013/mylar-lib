@@ -54,7 +54,7 @@ local function hashGet(currentCacheKey, beforeCacheKey, currentTime, hashField)
         -- 查询前任缓存键
         hashValue = redis.call("hget", beforeCacheKey, hashField) or nil
         if hashValue == nil then
-            return nil
+            return false
         end
 
         -- 标识Hash值是从前任缓存键中查出
@@ -77,7 +77,7 @@ local function hashGet(currentCacheKey, beforeCacheKey, currentTime, hashField)
         end
 
         -- HashKey过期时返回空
-        return nil;
+        return false;
     end
 
     -- 解析Hash值数据
@@ -90,16 +90,7 @@ local ret = {}
 for i = 3, len, 1 do
 
     -- 获取Hash值
-    -- ret[i - 2] = hashGet(currentCacheKey, beforeCacheKey, currentTime, ARGV[i])
-
-    -- 获取Hash值
-    local hValue = hashGet(currentCacheKey, beforeCacheKey, currentTime, ARGV[i])
-    if hValue == nil then
-        table.insert(ret, false)
-    else
-        table.insert(ret, hValue)
-    end
-
+    ret[i - 2] = hashGet(currentCacheKey, beforeCacheKey, currentTime, ARGV[i])
 end
 return ret
 

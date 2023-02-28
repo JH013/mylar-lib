@@ -2,43 +2,34 @@
 
 local unpack = unpack or table.unpack
 
-local function getNil()
-    return nil;
-end
-
--- 解决原生pack的nil截断问题，SafePack与SafeUnpack要成对使用
+-- 解决原生 pack 的 nil 截断问题
 local function safePack(...)
     local params = {...}
-    params.n = select('#', ...) --返回可变参数的数量,赋值给n
+    params.n = select('#', ...)
     return params
 end
 
--- 解决原生unpack的nil截断问题，SafePack与SafeUnpack要成对使用
+-- 解决原生 unpack 的 nil 截断问题
 local function safeUnpack(safe_pack_tb)
     return unpack(safe_pack_tb, 1, safe_pack_tb.n)
 end
 
--- local ret = {'123', '456', nil, '789' }
-
-local ret = {}
-table.insert(ret, '123')
-table.insert(ret, false)
-table.insert(ret, '456')
-table.insert(ret, false)
-table.insert(ret, '789')
-
--- ret.n = select('#', ret)
-
-return ret
-
--- local temp = safePack('123', '456', nil, '789');
-
+-- local temp = safePack('123', '456', nil, '789')
 -- return safeUnpack(temp)
 
--- ret[1] = '123'
--- ret[2] = getNil()
--- ret[3] = '456'
--- ret[4] = '789'
+-- return {'123', nil, '456', nil, '789' }
 
+-- local ret = {'123', nil, '456', nil, '789' }
+-- ret.n = select('#', ret)
 -- return ret
+
+-- local ret = {}
+-- table.insert(ret, '123')
+-- table.insert(ret, false)
+-- table.insert(ret, '456')
+-- table.insert(ret, false)
+-- table.insert(ret, '789')
+-- return ret
+
+return {'123', false, '456', false, '789'}
 
