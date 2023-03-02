@@ -59,6 +59,14 @@ public interface IHashExpireCache<T> {
     int hashExpireMultiSet(Map<String, T> hashValues);
 
     /**
+     * 批量更新缓存-当HashKey不存在时更新（支持字段过期）
+     *
+     * @param hashValues 值集合
+     * @return 成功数量
+     */
+    int hashExpireMultiSetNx(Map<String, T> hashValues);
+
+    /**
      * 删除缓存
      *
      * @param hashFields 字段集合

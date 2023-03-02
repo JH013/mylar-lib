@@ -1,7 +1,4 @@
 -- 支持过期的hash查询
--- User: chuff
--- Date: 2021/11/29 14:25
---
 
 local cacheKey = KEYS[1]
 local hashField = ARGV[1]

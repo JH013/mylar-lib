@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,6 +103,28 @@ public class TestRedisController {
     }
 
     /**
+     * Enhance Hash Batch Set Nx
+     *
+     * @param cacheKey   缓存键
+     * @param hashKeys   Hash Keys
+     * @param hashValues Hash Values
+     * @return 结果
+     */
+    @RequestMapping(value = "/expireHashBatchSetNx")
+    public String expireHashBatchSetNx(String cacheKey, String hashKeys, String hashValues) {
+        MyHashExpireCache myHashExpireCache = new MyHashExpireCache(cacheKey);
+        String[] keys = hashKeys.split(",");
+        String[] values = hashValues.split(",");
+        HashMap<String, MyRedisEntity> map = new HashMap<>();
+        for (int i = 0; i < keys.length; i++) {
+            map.put(keys[i], new MyRedisEntity(values[i], values[i]));
+        }
+
+        int i = myHashExpireCache.hashExpireMultiSetNx(map);
+        return JsonUtils.toJson(i);
+    }
+
+    /**
      * Enhance List Get
      *
      * @param cacheKey 缓存键
@@ -112,30 +135,5 @@ public class TestRedisController {
         MyListEnhanceCache myListEnhanceCache = new MyListEnhanceCache(cacheKey);
         List<MyRedisEntity> entities = myListEnhanceCache.getAndSyncIfAbsent();
         return JsonUtils.toJson(entities);
-    }
-
-    /**
-     * Hash Get
-     *
-     * @return Hash值
-     */
-    @RequestMapping(value = "/luaListGet")
-    public String luaListGet() {
-
-        IRedisAggregateOperations redisOperations = SpringResolver.resolve(IRedisAggregateOperations.class);
-
-        List<String> keys = new ArrayList<>();
-        keys.add("Test");
-
-        Object luaResult = redisOperations.opsScript().executeScript(SampleScript.singleton().luaListRetGet(), keys);
-
-        List<String> lst = (List<String>) luaResult;
-
-        for (String s : lst) {
-            System.out.println(s == null);
-            System.out.println(s);
-        }
-
-        return JsonUtils.toJson(lst);
     }
 }

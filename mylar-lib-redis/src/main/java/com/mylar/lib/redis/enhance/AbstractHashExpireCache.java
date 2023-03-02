@@ -225,6 +225,25 @@ public abstract class AbstractHashExpireCache<T> extends AbstractHashCache<T> im
     }
 
     /**
+     * 批量更新缓存-当HashKey不存在时更新（支持字段过期）
+     *
+     * @param hashValues 值集合
+     * @return 成功数量
+     */
+    @Override
+    public int hashExpireMultiSetNx(Map<String, T> hashValues) {
+
+        // 转换待更新数据
+        Map<String, String> syncItems = new HashMap<>(hashValues.size());
+        for (Map.Entry<String, T> entry : hashValues.entrySet()) {
+            syncItems.put(entry.getKey(), this.formatHashValue(entry.getValue()));
+        }
+
+        // 更新缓存
+        return this.redisOperations.opsHashExpire().hashExpireBatchSetNx(this.cacheKey, syncItems, this.getExpireTimeOut(), this.timeUnit);
+    }
+
+    /**
      * 删除缓存
      *
      * @param hashFields 字段集合

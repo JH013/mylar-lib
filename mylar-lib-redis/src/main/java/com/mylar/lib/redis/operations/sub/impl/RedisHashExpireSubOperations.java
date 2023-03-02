@@ -2,6 +2,7 @@ package com.mylar.lib.redis.operations.sub.impl;
 
 import com.google.common.collect.Lists;
 import com.mylar.lib.redis.core.RedisTemplateCache;
+import com.mylar.lib.redis.data.HashExpireOriginalVersionValue;
 import com.mylar.lib.redis.data.HashExpireValue;
 import com.mylar.lib.redis.operations.sub.IRedisHashExpireSubOperations;
 import com.mylar.lib.redis.operations.sub.IRedisScriptSubOperations;
@@ -261,6 +262,45 @@ public class RedisHashExpireSubOperations extends AbstractRedisSubOperations imp
     }
 
     /**
+     * 批量更新-当HashKey不存在时更新
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @param timeout         过期时间
+     * @param unit            单位
+     * @return 结果
+     */
+    @Override
+    public int hashExpireBatchSetNx(String cacheKey, Map<String, String> hashFieldValues, long timeout, TimeUnit unit) {
+
+        // 过期时间（单位：秒）
+        long expireSecond = unit.toSeconds(timeout);
+
+        // 封装 Hash 键值对
+        Map<String, HashExpireValue> fieldValues = new HashMap<>();
+        for (Map.Entry<String, String> entry : hashFieldValues.entrySet()) {
+            fieldValues.put(entry.getKey(), new HashExpireValue(expireSecond, entry.getValue()));
+        }
+
+        // 批量更新（分页执行）
+        return this.hashExpireBatchSetNxByPage(cacheKey, fieldValues);
+    }
+
+    /**
+     * 批量更新-根据版本号更新
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @return 结果
+     */
+    @Override
+    public int hashExpireBatchSetVer(String cacheKey, Map<String, HashExpireOriginalVersionValue> hashFieldValues) {
+
+        // 批量更新（分页执行）
+        return this.hashExpireBatchSetOnVersionByPage(cacheKey, hashFieldValues);
+    }
+
+    /**
      * 批量删除 HashKey
      *
      * @param cacheKey   缓存键
@@ -467,6 +507,145 @@ public class RedisHashExpireSubOperations extends AbstractRedisSubOperations imp
             return Integer.parseInt(luaResult.toString());
         } catch (Exception e) {
             log.error(String.format("[Expire Hash] batch set hash value failed, cache key: %s, hash keys: %s.",
+                    cacheKey, StringUtils.join(hashFieldValues.stream().map(Map.Entry::getKey).collect(Collectors.toList()), ",")), e);
+        }
+
+        return 0;
+    }
+
+    /**
+     * 批量更新-当HashKey不存在时更新（分页执行）
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @return 结果
+     */
+    private int hashExpireBatchSetNxByPage(String cacheKey, Map<String, HashExpireValue> hashFieldValues) {
+
+        // 小于分页大小：直接执行
+        if (hashFieldValues.size() <= DEFAULT_BATCH_SET_PAGE_SIZE) {
+            return this.hashExpireBatchSetNxOnSinglePage(cacheKey, hashFieldValues.entrySet());
+        }
+
+        // 大于分页大小：分页执行
+        int ret = 0;
+        List<Map.Entry<String, HashExpireValue>> lst = new ArrayList<>(hashFieldValues.entrySet());
+        for (List<Map.Entry<String, HashExpireValue>> partition : Lists.partition(lst, DEFAULT_BATCH_SET_PAGE_SIZE)) {
+            ret += this.hashExpireBatchSetNxOnSinglePage(cacheKey, partition);
+        }
+
+        return ret;
+    }
+
+    /**
+     * 批量更新-当HashKey不存在时更新（单页执行）
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @return 结果
+     */
+    private int hashExpireBatchSetNxOnSinglePage(String cacheKey, Collection<Map.Entry<String, HashExpireValue>> hashFieldValues) {
+        try {
+
+            // 键集合
+            List<String> keys = Collections.singletonList(cacheKey);
+
+            // 参数集合
+            List<String> args = new ArrayList<>();
+
+            // 参数 1：缓存键过期时间
+            args.add(DEFAULT_CACHE_KEY_EXPIRE);
+
+            // 参数 2：当前时间
+            args.add(String.valueOf(Instant.now().getEpochSecond()));
+
+            // 其他参数：1：Hash 键、2：Hash 键过期时间、3：版本号、4：真实 Hash 值
+            for (Map.Entry<String, HashExpireValue> item : hashFieldValues) {
+                args.add(item.getKey());
+                args.add(String.valueOf(item.getValue().getExpire()));
+                args.add(item.getValue().getVersion());
+                args.add(item.getValue().getRealValue());
+            }
+
+            // 执行脚本：批量更新
+            Object luaResult = this.scriptOperations.executeScript(HashExpireRedisScript.singleton().luaBatchSetNx(), keys, args);
+            if (luaResult == null) {
+                return 0;
+            }
+
+            return Integer.parseInt(luaResult.toString());
+        } catch (Exception e) {
+            log.error(String.format("[Expire Hash] batch set hash value nx failed, cache key: %s, hash keys: %s.",
+                    cacheKey, StringUtils.join(hashFieldValues.stream().map(Map.Entry::getKey).collect(Collectors.toList()), ",")), e);
+        }
+
+        return 0;
+    }
+
+    /**
+     * 批量更新-根据版本号更新（分页执行）
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @return 结果
+     */
+    private int hashExpireBatchSetOnVersionByPage(String cacheKey, Map<String, HashExpireOriginalVersionValue> hashFieldValues) {
+
+        // 小于分页大小：直接执行
+        if (hashFieldValues.size() <= DEFAULT_BATCH_SET_PAGE_SIZE) {
+            return this.hashExpireBatchSetOnVersionOnSinglePage(cacheKey, hashFieldValues.entrySet());
+        }
+
+        // 大于分页大小：分页执行
+        int ret = 0;
+        List<Map.Entry<String, HashExpireOriginalVersionValue>> lst = new ArrayList<>(hashFieldValues.entrySet());
+        for (List<Map.Entry<String, HashExpireOriginalVersionValue>> partition : Lists.partition(lst, DEFAULT_BATCH_SET_PAGE_SIZE)) {
+            ret += this.hashExpireBatchSetOnVersionOnSinglePage(cacheKey, partition);
+        }
+
+        return ret;
+    }
+
+    /**
+     * 批量更新-根据版本号更新（单页执行）
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @return 结果
+     */
+    private int hashExpireBatchSetOnVersionOnSinglePage(String cacheKey, Collection<Map.Entry<String, HashExpireOriginalVersionValue>> hashFieldValues) {
+        try {
+
+            // 键集合
+            List<String> keys = Collections.singletonList(cacheKey);
+
+            // 参数集合
+            List<String> args = new ArrayList<>();
+
+            // 参数 1：缓存键过期时间
+            args.add(DEFAULT_CACHE_KEY_EXPIRE);
+
+            // 参数 2：当前时间
+            args.add(String.valueOf(Instant.now().getEpochSecond()));
+
+            // 其他参数：1：Hash 键、2：Hash 键过期时间、3：版本号、4：原始版本号、5：真实 Hash 值
+            for (Map.Entry<String, HashExpireOriginalVersionValue> item : hashFieldValues) {
+                args.add(item.getKey());
+                args.add(String.valueOf(item.getValue().getExpire()));
+                args.add(item.getValue().getVersion());
+                args.add(item.getValue().getOriginalVersion());
+                args.add(item.getValue().getRealValue());
+            }
+
+            // 执行脚本：批量更新
+            Object luaResult = this.scriptOperations.executeScript(HashExpireRedisScript.singleton().luaBatchSetVer(), keys, args);
+            if (luaResult == null) {
+                return 0;
+            }
+
+            return Integer.parseInt(luaResult.toString());
+        } catch (Exception e) {
+            log.error(String.format("[Expire Hash] batch set hash value ver failed, cache key: %s, hash keys: %s.",
                     cacheKey, StringUtils.join(hashFieldValues.stream().map(Map.Entry::getKey).collect(Collectors.toList()), ",")), e);
         }
 

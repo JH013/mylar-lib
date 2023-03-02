@@ -79,6 +79,16 @@ public class HashExpireRedisScript {
      */
     private static final String LUA_HASH_EXPIRE_KEY_DEL = "scripts/hash.expire/hash_expire_key_del.lua";
 
+    /**
+     * lua 脚本路径 - 批量更新 - 当 HashKey 不存在时更新
+     */
+    private static final String LUA_HASH_EXPIRE_BATCH_SET_NX = "scripts/hash.expire/hash_expire_batch_set_nx.lua";
+
+    /**
+     * lua 脚本路径 - 批量更新 - 根据版本号更新
+     */
+    private static final String LUA_HASH_EXPIRE_BATCH_SET_VER = "scripts/hash.expire/hash_expire_batch_set_ver.lua";
+
     // endregion
 
     // region 公共方法
@@ -111,6 +121,20 @@ public class HashExpireRedisScript {
         return this.redisScripts.get(LUA_HASH_EXPIRE_KEY_DEL);
     }
 
+    /**
+     * lua 脚本 - 批量更新 - 当 HashKey 不存在时更新
+     */
+    public DefaultRedisScript<?> luaBatchSetNx() {
+        return this.redisScripts.get(LUA_HASH_EXPIRE_BATCH_SET_NX);
+    }
+
+    /**
+     * lua 脚本 - 批量更新 - 根据版本号更新
+     */
+    public DefaultRedisScript<?> luaBatchSetVer() {
+        return this.redisScripts.get(LUA_HASH_EXPIRE_BATCH_SET_VER);
+    }
+
     // endregion
 
     // region 私有方法
@@ -124,6 +148,8 @@ public class HashExpireRedisScript {
         this.initScript(LUA_HASH_EXPIRE_BATCH_DEL, Integer.class);
         this.initScript(LUA_HASH_EXPIRE_BATCH_SET, Integer.class);
         this.initScript(LUA_HASH_EXPIRE_KEY_DEL, Integer.class);
+        this.initScript(LUA_HASH_EXPIRE_BATCH_SET_NX, Integer.class);
+        this.initScript(LUA_HASH_EXPIRE_BATCH_SET_VER, Integer.class);
     }
 
     /**

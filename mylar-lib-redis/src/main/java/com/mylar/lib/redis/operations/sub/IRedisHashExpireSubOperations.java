@@ -1,5 +1,9 @@
 package com.mylar.lib.redis.operations.sub;
 
+import com.mylar.lib.redis.data.HashExpireOriginalVersionValue;
+import com.mylar.lib.redis.data.HashExpireValue;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -89,6 +93,26 @@ public interface IRedisHashExpireSubOperations {
      * @return 结果
      */
     int hashExpireBatchSet(String cacheKey, Map<String, String> hashFieldValues, long timeout, TimeUnit unit);
+
+    /**
+     * 批量更新-当HashKey不存在时更新
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @param timeout         过期时间
+     * @param unit            单位
+     * @return 结果
+     */
+    int hashExpireBatchSetNx(String cacheKey, Map<String, String> hashFieldValues, long timeout, TimeUnit unit);
+
+    /**
+     * 批量更新-根据版本号更新
+     *
+     * @param cacheKey        缓存键
+     * @param hashFieldValues Hash 键值对
+     * @return 结果
+     */
+    int hashExpireBatchSetVer(String cacheKey, Map<String, HashExpireOriginalVersionValue> hashFieldValues);
 
     /**
      * 批量删除 HashKey

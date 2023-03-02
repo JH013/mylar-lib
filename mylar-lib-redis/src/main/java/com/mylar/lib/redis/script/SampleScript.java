@@ -64,6 +64,16 @@ public class SampleScript {
      */
     private static final String LUA_LIST_RET_GET = "scripts/sample/list_ret_get.lua";
 
+    /**
+     * lua 脚本路径 - 测试局部变量在函数中使用
+     */
+    private static final String LUA_LOCAL_FUNC_PARAM = "scripts/sample/local_func_param.lua";
+
+    /**
+     * lua 脚本路径 - 测试跨脚本函数调用
+     */
+    private static final String LUA_CROSS_FUNC_CALL = "scripts/sample/cross_func_call.lua";
+
     // endregion
 
     // region 公共方法
@@ -75,6 +85,21 @@ public class SampleScript {
         return this.redisScripts.get(LUA_LIST_RET_GET);
     }
 
+    /**
+     * lua 脚本 -测试局部变量在函数中使用
+     */
+    public DefaultRedisScript<?> luaLocalFuncParam() {
+        return this.redisScripts.get(LUA_LOCAL_FUNC_PARAM);
+    }
+
+    /**
+     * lua 脚本 -测试跨脚本函数调用
+     */
+    public DefaultRedisScript<?> luaCrossFuncCall() {
+        return this.redisScripts.get(LUA_CROSS_FUNC_CALL);
+    }
+
+
     // endregion
 
     // region 私有方法
@@ -85,6 +110,8 @@ public class SampleScript {
     protected void initAllScript() {
         this.redisScripts = new HashMap<>();
         this.initScript(LUA_LIST_RET_GET, Integer.class);
+        this.initScript(LUA_LOCAL_FUNC_PARAM, String.class);
+        this.initScript(LUA_CROSS_FUNC_CALL, String.class);
     }
 
     /**
