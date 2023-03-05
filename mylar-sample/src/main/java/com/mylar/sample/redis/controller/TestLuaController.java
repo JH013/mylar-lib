@@ -1,6 +1,5 @@
 package com.mylar.sample.redis.controller;
 
-import com.mylar.lib.base.SpringResolver;
 import com.mylar.lib.base.utils.JsonUtils;
 import com.mylar.lib.redis.operations.IRedisAggregateOperations;
 import com.mylar.lib.redis.script.SampleScript;

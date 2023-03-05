@@ -32,6 +32,7 @@ public class RedisAggregateOperations implements IRedisAggregateOperations {
         this.sortSetOperations = new RedisSortSetSubOperations(redisTemplateCache);
         this.scriptOperations = new RedisScriptSubOperations(redisTemplateCache);
         this.hashExpireOperations = new RedisHashExpireSubOperations(redisTemplateCache);
+        this.distributionLockOperations = new RedisDistributionLockSubOperations(redisTemplateCache);
     }
 
     // region 变量
@@ -75,6 +76,11 @@ public class RedisAggregateOperations implements IRedisAggregateOperations {
      * Redis Sub Operations - Hash Expire
      */
     private final IRedisHashExpireSubOperations hashExpireOperations;
+
+    /**
+     * Redis Sub Operations - Distribution Lock
+     */
+    private final IRedisDistributionLockSubOperations distributionLockOperations;
 
     // endregion
 
@@ -158,6 +164,16 @@ public class RedisAggregateOperations implements IRedisAggregateOperations {
     @Override
     public IRedisHashExpireSubOperations opsHashExpire() {
         return this.hashExpireOperations;
+    }
+
+    /**
+     * 获取 Redis Sub Operations - Distribution Lock
+     *
+     * @return 结果
+     */
+    @Override
+    public IRedisDistributionLockSubOperations opsDistributionLock() {
+        return this.distributionLockOperations;
     }
 
     // endregion

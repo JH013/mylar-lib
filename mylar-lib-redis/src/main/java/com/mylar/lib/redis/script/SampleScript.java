@@ -79,21 +79,21 @@ public class SampleScript {
     // region 公共方法
 
     /**
-     * lua 脚本 -测试集合返回
+     * lua 脚本 - 测试集合返回
      */
     public DefaultRedisScript<?> luaListRetGet() {
         return this.redisScripts.get(LUA_LIST_RET_GET);
     }
 
     /**
-     * lua 脚本 -测试局部变量在函数中使用
+     * lua 脚本 - 测试局部变量在函数中使用
      */
     public DefaultRedisScript<?> luaLocalFuncParam() {
         return this.redisScripts.get(LUA_LOCAL_FUNC_PARAM);
     }
 
     /**
-     * lua 脚本 -测试跨脚本函数调用
+     * lua 脚本 - 测试跨脚本函数调用
      */
     public DefaultRedisScript<?> luaCrossFuncCall() {
         return this.redisScripts.get(LUA_CROSS_FUNC_CALL);

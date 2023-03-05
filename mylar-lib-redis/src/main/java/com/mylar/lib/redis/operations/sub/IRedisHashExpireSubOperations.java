@@ -1,9 +1,7 @@
 package com.mylar.lib.redis.operations.sub;
 
 import com.mylar.lib.redis.data.HashExpireOriginalVersionValue;
-import com.mylar.lib.redis.data.HashExpireValue;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

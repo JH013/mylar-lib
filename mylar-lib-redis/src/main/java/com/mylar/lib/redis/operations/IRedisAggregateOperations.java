@@ -65,4 +65,11 @@ public interface IRedisAggregateOperations {
      * @return 结果
      */
     IRedisHashExpireSubOperations opsHashExpire();
+
+    /**
+     * 获取 Redis Sub Operations - Distribution Lock
+     *
+     * @return 结果
+     */
+    IRedisDistributionLockSubOperations opsDistributionLock();
 }
