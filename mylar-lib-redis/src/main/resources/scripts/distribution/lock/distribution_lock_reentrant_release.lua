@@ -3,16 +3,16 @@
 -- 锁定键
 local lockKey = KEYS[1];
 
--- 当前线程Id
-local currentThread = ARGV[1];
+-- 锁定值
+local lockValue = ARGV[1];
 
 -- 锁不存在：返回 0，表示锁自动过期释放
-if (redis.call('hexists', lockKey, currentThread) == 0) then
+if (redis.call('hexists', lockKey, lockValue) == 0) then
     return 0;
 end;
 
 -- 锁已存在：重入次数减 1，当重入次数为 0 时删除锁
-if (redis.call('hincrby', lockKey, currentThread, -1) == 0) then
+if (redis.call('hincrby', lockKey, lockValue, -1) == 0) then
     redis.call('del', lockKey);
 end;
 

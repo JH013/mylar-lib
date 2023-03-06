@@ -1,5 +1,6 @@
 package com.mylar.lib.redis.operations.sub.impl;
 
+import com.mylar.lib.base.utils.HostNameUtils;
 import com.mylar.lib.redis.core.RedisTemplateCache;
 import com.mylar.lib.redis.operations.sub.IRedisDistributionLockSubOperations;
 import com.mylar.lib.redis.operations.sub.IRedisScriptSubOperations;
@@ -8,6 +9,7 @@ import com.mylar.lib.redis.script.DistributionLockScript;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,16 +46,17 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
     /**
      * 加锁成功返回值
      */
-    private static final Integer LOCK_SUCCESS = 1;
+    private static final Long LOCK_SUCCESS = 1L;
 
     /**
      * 释放锁成功返回值
      */
-    private static final Integer RELEASE_LOCK_SUCCESS = 1;
+    private static final Long RELEASE_LOCK_SUCCESS = 1L;
+
     /**
      * 锁自动过期返回值
      */
-    private static final Integer RELEASE_LOCK_AUTO_EXPIRE = 0;
+    private static final Long RELEASE_LOCK_AUTO_EXPIRE = 0L;
 
     /**
      * 分布式锁的默认锁定超时时间（单位：毫秒）
@@ -63,7 +66,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
     /**
      * 分布式锁的默认锁过期时间（单位：毫秒）
      */
-    private static final Integer DEFAULT_LOCK_EXPIRE = 300000;
+    private static final Integer DEFAULT_LOCK_EXPIRE = 300;
 
     // endregion
 
@@ -98,7 +101,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
      * 尝试加锁
      *
      * @param lockKey     锁定键
-     * @param lockTimeout 锁定超时时间（单位：秒）
+     * @param lockTimeout 锁定超时时间（单位：毫秒）
      * @param expireTime  锁过期时间（单位：秒）
      * @param funcExec    业务执行方法
      * @return 是否成功
@@ -112,7 +115,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
      * 尝试加锁
      *
      * @param lockKey          锁定键
-     * @param lockTimeout      锁定超时时间（单位：秒）
+     * @param lockTimeout      锁定超时时间（单位：毫秒）
      * @param expireTime       锁过期时间（单位：秒）
      * @param funcExec         业务执行方法
      * @param supportReentrant 是否支持可重入
@@ -138,10 +141,8 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
         String lockValue = null;
         try {
 
-            // 不断尝试加锁
+            // 不断尝试加锁，线程中断，返回失败
             while (!Thread.interrupted()) {
-
-                // 线程中断，返回失败
 
                 // 加锁并返回锁定值
                 lockValue = this.addLock(lockKey, expireTime, supportReentrant);
@@ -179,7 +180,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
      * 添加锁
      *
      * @param lockKey          锁定键
-     * @param expireTime       锁过期时间
+     * @param expireTime       锁过期时间（单位：秒）
      * @param supportReentrant 是否支持可重入
      * @return 锁定值
      */
@@ -198,7 +199,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
      * 添加锁（基础）
      *
      * @param lockKey    锁定键
-     * @param expireTime 锁过期时间
+     * @param expireTime 锁过期时间（单位：秒）
      * @return 锁定值
      */
     private String addBasicLock(String lockKey, long expireTime) {
@@ -212,7 +213,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
         String lockValue = Double.toString(Math.random());
 
         // 键不存在时设置缓存值
-        Boolean success = this.getTemplate(lockKey).opsForValue().setIfAbsent(lockKey, lockValue, expireTime, TimeUnit.MILLISECONDS);
+        Boolean success = this.getTemplate(lockKey).opsForValue().setIfAbsent(lockKey, lockValue, expireTime, TimeUnit.SECONDS);
 
         // 加锁成功：返回锁定值
         if (Boolean.TRUE.equals(success)) {
@@ -227,7 +228,7 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
      * 添加锁（可重入）
      *
      * @param lockKey    锁定键
-     * @param expireTime 锁过期时间
+     * @param expireTime 锁过期时间（单位：秒）
      * @return 锁定值
      */
     private String addReentrantLock(String lockKey, long expireTime) {
@@ -237,20 +238,15 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
             expireTime = DEFAULT_LOCK_EXPIRE;
         }
 
-        // 锁定值随机生成
-        String lockValue = Double.toString(Math.random());
-
-        // 当前线程Id
-        long threadId = Thread.currentThread().getId();
-
         // 键集合
         List<String> keys = Collections.singletonList(lockKey);
 
         // 参数集合
         List<String> args = new ArrayList<>();
 
-        // 参数 1：随机锁定值 + 当前线程Id
-        args.add(lockValue + threadId);
+        // 参数 1：锁定值 = 主机名 + 当前线程Id
+        String lockValue = HostNameUtils.HOSTNAME + Thread.currentThread().getId();
+        args.add(lockValue);
 
         // 参数 2：锁过期时间
         args.add(String.valueOf(expireTime));
@@ -315,14 +311,11 @@ public class RedisDistributionLockSubOperations extends AbstractRedisSubOperatio
      */
     private boolean releaseReentrantLock(String lockKey, String lockValue) {
 
-        // 当前线程Id
-        long threadId = Thread.currentThread().getId();
-
         // 键集合
         List<String> keys = Collections.singletonList(lockKey);
 
-        // 参数集合：随机锁定值 + 当前线程Id
-        List<String> args = Collections.singletonList(lockValue + threadId);
+        // 参数集合
+        List<String> args = Collections.singletonList(lockValue);
 
         // 执行脚本：分布式锁 - 可重入 - 释放锁
         Object luaResult = this.scriptOperations.executeScript(DistributionLockScript.singleton().luaDistributionLockReentrantRelease(), keys, args);

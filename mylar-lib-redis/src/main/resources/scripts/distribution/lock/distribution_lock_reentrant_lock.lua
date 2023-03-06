@@ -3,8 +3,8 @@
 -- 锁定键
 local lockKey = KEYS[1];
 
--- 当前线程Id
-local currentThread = ARGV[1];
+-- 锁定值
+local lockValue = ARGV[1];
 
 -- 锁过期时间
 local expireTime = ARGV[2];
@@ -13,7 +13,7 @@ local expireTime = ARGV[2];
 if (redis.call('exists', lockKey) == 0) then
 
     -- 添加锁并设置重入次数为 1
-    redis.call('hset', lockKey, currentThread, '1');
+    redis.call('hset', lockKey, lockValue, '1');
 
     -- 设置过期时间
     redis.call('expire', lockKey, expireTime);
@@ -23,10 +23,10 @@ if (redis.call('exists', lockKey) == 0) then
 end;
 
 -- 锁已存在且由当前线程持有
-if (redis.call('hexists', lockKey, currentThread) == 1) then
+if (redis.call('hexists', lockKey, lockValue) == 1) then
 
     -- 重入次数加 1
-    redis.call('hincrby', lockKey, currentThread, '1');
+    redis.call('hincrby', lockKey, lockValue, '1');
 
     -- 设置过期时间
     redis.call('expire', lockKey, expireTime);

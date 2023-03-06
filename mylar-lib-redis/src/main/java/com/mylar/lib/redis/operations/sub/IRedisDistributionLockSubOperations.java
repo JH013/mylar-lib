@@ -33,7 +33,7 @@ public interface IRedisDistributionLockSubOperations {
      * 尝试加锁
      *
      * @param lockKey     锁定键
-     * @param lockTimeout 锁定超时时间（单位：秒）
+     * @param lockTimeout 锁定超时时间（单位：毫秒）
      * @param expireTime  锁过期时间（单位：秒）
      * @param funcExec    业务执行方法
      * @return 是否成功
@@ -44,7 +44,7 @@ public interface IRedisDistributionLockSubOperations {
      * 尝试加锁
      *
      * @param lockKey          锁定键
-     * @param lockTimeout      锁定超时时间（单位：秒）
+     * @param lockTimeout      锁定超时时间（单位：毫秒）
      * @param expireTime       锁过期时间（单位：秒）
      * @param funcExec         业务执行方法
      * @param supportReentrant 是否支持可重入
