@@ -1,6 +1,6 @@
 package com.mylar.lib.redis.enhance;
 
-import com.mylar.lib.base.SpringResolver;
+import com.mylar.lib.base.enhance.SpringResolver;
 import com.mylar.lib.redis.operations.IRedisAggregateOperations;
 import org.springframework.beans.factory.InitializingBean;
 

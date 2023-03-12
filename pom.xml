@@ -6,6 +6,7 @@
     <modules>
         <module>mylar-lib-redis</module>
 		<module>mylar-lib-base</module>
+		<module>mylar-lib-job</module>
 	</modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>

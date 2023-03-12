@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.mylar.lib.base.LambdaExpressionObject;
+import com.mylar.lib.base.data.LambdaExpressionObject;
 import org.springframework.util.StringUtils;
 
 /**

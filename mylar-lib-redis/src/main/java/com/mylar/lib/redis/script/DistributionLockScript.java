@@ -50,7 +50,7 @@ public class DistributionLockScript {
         }
     }
 
-    //endregion
+    // endregion
 
     // region 变量 & 常量
 

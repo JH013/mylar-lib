@@ -42,7 +42,13 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.mylar.lib</groupId>
+			<artifactId>mylar-lib-job</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>

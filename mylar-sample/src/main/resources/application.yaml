@@ -6,3 +6,13 @@ my:
     port: 6677
     password: 1qaz2wsxE
     database: 1
+
+system:
+  site-type: mylar-sample
+
+mylar:
+  job:
+    single:
+      enable: true
+      cron:
+        default.mylar-print-job: 0/5 * * * * ?

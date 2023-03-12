@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = {
         "com.mylar.lib.base",
         "com.mylar.sample",
-        "com.mylar.lib.redis"
+        "com.mylar.lib.redis",
+        "com.mylar.lib.job"
 })
 public class MylarSampleApplication {
 
