@@ -1,11 +1,11 @@
-package com.mylar.lib.job.core;
+package com.mylar.lib.job.single.core;
 
-import com.mylar.lib.job.annotation.SingleJobBasicConfig;
-import com.mylar.lib.job.control.SingleJobControlAggregation;
-import com.mylar.lib.job.control.SingleJobControlResolver;
-import com.mylar.lib.job.control.SingleJobControlParam;
-import com.mylar.lib.job.scheduler.ISingleJobScheduler;
-import com.mylar.lib.job.scheduler.SingleJobScheduler;
+import com.mylar.lib.job.single.annotation.SingleJobBasicConfig;
+import com.mylar.lib.job.single.control.SingleJobControlAggregation;
+import com.mylar.lib.job.single.control.SingleJobControlResolver;
+import com.mylar.lib.job.single.control.SingleJobControlParam;
+import com.mylar.lib.job.single.scheduler.ISingleJobScheduler;
+import com.mylar.lib.job.single.scheduler.SingleJobScheduler;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

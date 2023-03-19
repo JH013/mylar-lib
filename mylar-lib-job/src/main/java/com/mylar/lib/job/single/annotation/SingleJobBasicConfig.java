@@ -1,4 +1,4 @@
-package com.mylar.lib.job.annotation;
+package com.mylar.lib.job.single.annotation;
 
 import org.quartz.listeners.JobListenerSupport;
 import org.quartz.listeners.TriggerListenerSupport;

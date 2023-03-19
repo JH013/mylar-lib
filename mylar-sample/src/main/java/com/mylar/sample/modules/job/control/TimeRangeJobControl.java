@@ -1,8 +1,8 @@
 package com.mylar.sample.modules.job.control;
 
 import com.mylar.lib.base.utils.TimeSpanUtils;
-import com.mylar.lib.job.annotation.SingleJobBasicConfig;
-import com.mylar.lib.job.control.AbstractSingleJobControl;
+import com.mylar.lib.job.single.annotation.SingleJobBasicConfig;
+import com.mylar.lib.job.single.control.AbstractSingleJobControl;
 import org.quartz.JobKey;
 
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.mylar.lib.job.control;
+package com.mylar.lib.job.single.control;
 
 import java.util.ArrayList;
 import java.util.HashMap;

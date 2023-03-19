@@ -1,7 +1,7 @@
 package com.mylar.sample.modules.job;
 
-import com.mylar.lib.job.annotation.SingleJobBasicConfig;
-import com.mylar.lib.job.core.AbstractSingleJob;
+import com.mylar.lib.job.single.annotation.SingleJobBasicConfig;
+import com.mylar.lib.job.single.core.AbstractSingleJob;
 import com.mylar.sample.modules.job.control.annotation.ConfigurableCronJobControlConfig;
 import com.mylar.sample.modules.job.control.annotation.SiteTypeJobControlConfig;
 import com.mylar.sample.modules.job.control.annotation.TimeRangeJobControlConfig;

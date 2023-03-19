@@ -1,7 +1,7 @@
-package com.mylar.lib.job.core;
+package com.mylar.lib.job.single.core;
 
 import com.mylar.lib.base.enhance.SpringResolver;
-import com.mylar.lib.job.control.ISingleJobControlAggregation;
+import com.mylar.lib.job.single.control.ISingleJobControlAggregation;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

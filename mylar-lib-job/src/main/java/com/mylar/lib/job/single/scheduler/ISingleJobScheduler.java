@@ -1,4 +1,4 @@
-package com.mylar.lib.job.scheduler;
+package com.mylar.lib.job.single.scheduler;
 
 import org.quartz.Scheduler;
 

@@ -1,9 +1,9 @@
-package com.mylar.lib.job.control;
+package com.mylar.lib.job.single.control;
 
 import com.mylar.lib.base.enhance.InstanceCache;
 import com.mylar.lib.base.utils.AnnotationUtils;
-import com.mylar.lib.job.annotation.SingleJobControlConfig;
-import com.mylar.lib.job.core.AbstractSingleJob;
+import com.mylar.lib.job.single.annotation.SingleJobControlConfig;
+import com.mylar.lib.job.single.core.AbstractSingleJob;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;

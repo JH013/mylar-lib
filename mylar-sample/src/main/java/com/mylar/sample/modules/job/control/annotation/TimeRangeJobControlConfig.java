@@ -1,6 +1,6 @@
 package com.mylar.sample.modules.job.control.annotation;
 
-import com.mylar.lib.job.annotation.SingleJobControlConfig;
+import com.mylar.lib.job.single.annotation.SingleJobControlConfig;
 import com.mylar.sample.modules.job.control.TimeRangeJobControl;
 
 import java.lang.annotation.ElementType;

@@ -1,6 +1,6 @@
-package com.mylar.lib.job.annotation;
+package com.mylar.lib.job.single.annotation;
 
-import com.mylar.lib.job.control.AbstractSingleJobControl;
+import com.mylar.lib.job.single.control.AbstractSingleJobControl;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

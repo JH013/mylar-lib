@@ -1,6 +1,6 @@
-package com.mylar.lib.job.control;
+package com.mylar.lib.job.single.control;
 
-import com.mylar.lib.job.annotation.SingleJobBasicConfig;
+import com.mylar.lib.job.single.annotation.SingleJobBasicConfig;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobKey;
 import org.springframework.stereotype.Component;
