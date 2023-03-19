@@ -1,0 +1,135 @@
+'可访问性说明
+'private -
+'protect #
+'package private ~
+'public +
+'其他参见plantuml类图说明：https://plantuml.com/zh/class-diagram
+
+'Quartz类图设计
+@startuml
+
+'接口定义开始
+
+interface Runnable <<系统 Runnable 接口>> {
+    abstract void run() : 运行
+}
+
+interface ThreadPool <<Quartz 线程池接口>> {
+    boolean runInThread(Runnable runnable) : 放到线程池中运行
+    void initialize() : 初始化
+    void shutdown(boolean waitForJobsToComplete) : 关闭线程
+    int getPoolSize() : 获取线程池大小
+    void setInstanceId(String schedInstId) : 设置实例id
+    void setInstanceName(String schedName) : 设置实例名称
+}
+
+interface Scheduler <<Quartz 调度器接口>> {
+    void start() : 启动调度器
+    Date scheduleJob(JobDetail jobDetail, Trigger trigger) : 调度任务
+}
+
+interface Remote <<系统 Remote 接口>> {
+
+}
+
+interface RemotableQuartzScheduler <<Quartz Remote 调度器接口>> {
+    Date scheduleJob(JobDetail jobDetail, Trigger trigger) : 调度任务
+}
+
+interface SchedulerFactory <<Quartz 调度器工厂接口>> {
+    Scheduler getScheduler() : 获取调度器
+}
+
+interface SchedulerListener <<Quartz 调度监听器接口>> {
+
+}
+
+
+'类定义开始
+
+class Thread <<系统线程类>> {
+}
+
+class WorkerThread <<Quartz 工作线程>> {
+    void run() : 运行
+}
+
+class SimpleThreadPool <<Quartz 简单线程池>> {
+    int count : 线程数量
+    List<WorkerThread> workers : 全部工作线程
+    LinkedList<WorkerThread> availWorkers : 空闲中工作线程
+    LinkedList<WorkerThread> busyWorkers : 运行中工作线程
+}
+
+class QuartzSchedulerThread <<Quartz 调度器线程>> {
+    QuartzSchedulerResources qsRsrcs : 调度器资源
+    void run() : 运行
+}
+
+class StdScheduler <<Quartz 标准调度器>> {
+    QuartzScheduler sched : Quartz Remotable 调度器
+    void start() : 启动调度器
+    Date scheduleJob(JobDetail jobDetail, Trigger trigger) : 调度任务
+}
+
+class QuartzScheduler <<Quartz Remotable 调度器>> {
+    QuartzSchedulerResources resources : 调度器资源
+    QuartzSchedulerThread schedThread : 调度器线程
+    void start() : 启动调度器
+    Date scheduleJob(JobDetail jobDetail, Trigger trigger) : 调度任务
+}
+
+class StdSchedulerFactory <<Quartz 标准调度器工厂>> {
+    Scheduler getScheduler() : 获取调度器
+    Scheduler instantiate() : 实例化调度器
+}
+
+class QuartzSchedulerResources <<Quartz 调度器资源>> {
+    ThreadPool threadPool : 任务执行线程池
+}
+
+abstract class SchedulerListenerSupport <<Quartz 调度监听器抽象类>> {
+
+}
+
+class JobRunShell <<Quartz 任务运行 Shell>> {
+
+}
+
+
+'继承关系定义
+
+'库存同步发起
+Runnable <|.. Thread : 实现
+Thread <|-- WorkerThread : 继承
+Thread <|-- QuartzSchedulerThread : 继承
+
+ThreadPool <|.. SimpleThreadPool : 实现
+
+Remote <|.. RemotableQuartzScheduler : 实现
+RemotableQuartzScheduler <|.. QuartzScheduler : 实现
+
+Scheduler <|.. StdScheduler : 实现
+
+SchedulerFactory <|.. StdSchedulerFactory : 实现
+
+SchedulerListener <|.. SchedulerListenerSupport : 实现
+SchedulerListenerSupport <|-- JobRunShell : 实现
+Runnable <|.. JobRunShell : 实现
+
+
+'其它关系定义
+SimpleThreadPool o--> WorkerThread : 聚合（成员集合变量）
+QuartzSchedulerResources --> ThreadPool : 关联（成员变量）
+
+QuartzScheduler --> QuartzSchedulerResources : 关联（成员变量）
+QuartzScheduler --> QuartzSchedulerThread : 关联（成员变量）
+
+StdScheduler --> QuartzScheduler : 关联（成员变量）
+
+StdSchedulerFactory ..> Scheduler : 依赖（局部变量）
+
+QuartzSchedulerThread ..> JobRunShell : 依赖（局部变量）
+QuartzSchedulerThread --> QuartzSchedulerResources : 关联（成员变量）
+
+@enduml

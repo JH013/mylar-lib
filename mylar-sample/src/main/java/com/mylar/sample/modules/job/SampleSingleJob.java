@@ -47,5 +47,15 @@ public class SampleSingleJob extends AbstractSingleJob {
         this.log.info("[{}]-[{}]-[{}] -> finish. ", jobSign, Thread.currentThread().getName(), LocalDateTime.now());
     }
 
+    /**
+     * 串行执行
+     *
+     * @param jobExecutionContext 任务执行上下文
+     * @return 结果
+     */
+    protected boolean serialExecution(JobExecutionContext jobExecutionContext) {
+        return false;
+    }
+
     // endregion
 }
