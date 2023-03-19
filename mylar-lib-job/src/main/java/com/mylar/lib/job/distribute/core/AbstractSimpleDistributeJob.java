@@ -71,7 +71,7 @@ public abstract class AbstractSimpleDistributeJob<T extends SimpleDistributeJobD
         List<T> shardingData = jobShardingStrategy.getShardingData(jobContext.getAllInstance(), jobContext.getCurrentInstance(), allJobData);
 
         // 当前分片任务数据处理
-        this.runOnCurrentSharding(shardingData);
+        this.runOnCurrentSharding(jobExecutionContext, shardingData);
     }
 
     // endregion
@@ -88,9 +88,10 @@ public abstract class AbstractSimpleDistributeJob<T extends SimpleDistributeJobD
     /**
      * 当前分片任务数据处理
      *
-     * @param data 当前分片任务数据
+     * @param jobExecutionContext 任务执行上下文
+     * @param data                当前分片任务数据
      */
-    protected abstract void runOnCurrentSharding(List<T> data);
+    protected abstract void runOnCurrentSharding(JobExecutionContext jobExecutionContext, List<T> data);
 
     // endregion
 }
