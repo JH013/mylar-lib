@@ -13,5 +13,10 @@ package com.mylar.lib.base.enums.core;
  */
 public interface CodeEnum {
 
+    /**
+     * 获取编码
+     *
+     * @return 编码
+     */
     String getCode();
 }

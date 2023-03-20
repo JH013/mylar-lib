@@ -13,5 +13,10 @@ package com.mylar.lib.base.enums.core;
  */
 public interface ValueEnum {
 
+    /**
+     * 获取值
+     *
+     * @return 值
+     */
     Integer getValue();
 }
