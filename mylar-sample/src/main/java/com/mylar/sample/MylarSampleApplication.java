@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.mylar.lib.base",
         "com.mylar.sample",
         "com.mylar.lib.redis",
-        "com.mylar.lib.job"
+        "com.mylar.lib.job",
+        "com.mylar.lib.thread"
 })
 public class MylarSampleApplication {
 

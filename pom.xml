@@ -7,7 +7,8 @@
         <module>mylar-lib-redis</module>
 		<module>mylar-lib-base</module>
 		<module>mylar-lib-job</module>
-	</modules>
+        <module>mylar-lib-thread</module>
+    </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
