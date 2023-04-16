@@ -1,5 +1,6 @@
 package com.mylar.lib.redis.operations.sub;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,6 +61,14 @@ public interface IRedisSortSetSubOperations {
      * @param endScore   截止 Score
      */
     void sortSetRemove(String cacheKey, double startScore, double endScore);
+
+    /**
+     * 根据 Score 删除缓存值
+     *
+     * @param cacheKey 缓存键
+     * @param values   值集合
+     */
+    <T> void sortSetRemove(String cacheKey, List<T> values);
 
     /**
      * 根据 Score 获取元素数量

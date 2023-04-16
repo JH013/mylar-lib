@@ -8,6 +8,7 @@
 		<module>mylar-lib-base</module>
 		<module>mylar-lib-job</module>
         <module>mylar-lib-thread</module>
+        <module>mylar-lib-limiter</module>
     </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>

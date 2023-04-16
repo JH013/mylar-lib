@@ -21,6 +21,12 @@ public class MyRedisKeyPropertiesMapper implements IRedisKeyPropertiesMapper {
     private MyRedisProperties myRedisProperties;
 
     /**
+     * 本地缓存配置属性
+     */
+    @Autowired
+    private LocalRedisProperties localRedisProperties;
+
+    /**
      * 缓存键映射成缓存类型
      *
      * @param cacheKey 缓存键
@@ -28,6 +34,11 @@ public class MyRedisKeyPropertiesMapper implements IRedisKeyPropertiesMapper {
      */
     @Override
     public String mapToCacheType(String cacheKey) {
+
+        if (cacheKey.contains("local")) {
+            return "LOCAL";
+        }
+
         return "BASE";
     }
 
@@ -39,6 +50,11 @@ public class MyRedisKeyPropertiesMapper implements IRedisKeyPropertiesMapper {
      */
     @Override
     public BaseRedisProperties mapToProperties(String cacheType) {
+
+        if ("LOCAL".equals(cacheType)) {
+            return this.localRedisProperties;
+        }
+
         return this.myRedisProperties;
     }
 }

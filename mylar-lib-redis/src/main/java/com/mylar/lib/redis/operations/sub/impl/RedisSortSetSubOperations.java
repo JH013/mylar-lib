@@ -8,10 +8,7 @@ import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -162,6 +159,17 @@ public class RedisSortSetSubOperations extends AbstractRedisSubOperations implem
     @Override
     public void sortSetRemove(String cacheKey, double startScore, double endScore) {
         this.getTemplate(cacheKey).opsForZSet().removeRangeByScore(cacheKey, startScore, endScore);
+    }
+
+    /**
+     * 根据 Score 删除缓存值
+     *
+     * @param cacheKey 缓存键
+     * @param values   值集合
+     */
+    @Override
+    public <T> void sortSetRemove(String cacheKey, List<T> values) {
+        this.getTemplate(cacheKey).opsForZSet().remove(cacheKey, values);
     }
 
     /**

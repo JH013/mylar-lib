@@ -6,6 +6,11 @@ my:
     port: 6677
     password: 1qaz2wsxE
     database: 1
+local:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 2
 
 system:
   site-type: mylar-sample

@@ -8,7 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.mylar.sample",
         "com.mylar.lib.redis",
         "com.mylar.lib.job",
-        "com.mylar.lib.thread"
+        "com.mylar.lib.thread",
+        "com.mylar.lib.limiter"
 })
 public class MylarSampleApplication {
 
