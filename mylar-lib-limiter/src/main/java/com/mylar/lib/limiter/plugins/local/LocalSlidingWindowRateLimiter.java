@@ -53,8 +53,17 @@ public class LocalSlidingWindowRateLimiter extends AbstractRateLimiter<SlidingWi
     @Override
     public synchronized RateLimitResult acquire(int requestCount) {
 
+        // 当前时间
+        long now = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+        // 子窗口大小
+        long subTimeCycle = this.limitArgs.getSubTimeCycle();
+
+        // 当前子窗口时间
+        long currentWindowTime = now / subTimeCycle * subTimeCycle;
+
         // 获取当前窗口内请求总数
-        long currentTotal = this.getCurrentTotal();
+        long currentTotal = this.getCurrentTotal(currentWindowTime);
 
         // 剩余可用凭证数量 = 限流上限 - 当前窗口内请求数量总数 - 请求数量
         long remainsPermits = this.limitArgs.getCapacity() - currentTotal - requestCount;
@@ -65,7 +74,7 @@ public class LocalSlidingWindowRateLimiter extends AbstractRateLimiter<SlidingWi
         }
 
         // 未超限：计数器累加
-        counters.merge(currentTotal, requestCount, Integer::sum);
+        counters.merge(currentWindowTime, requestCount, Integer::sum);
         return RateLimitResult.allow(remainsPermits);
     }
 
@@ -78,19 +87,13 @@ public class LocalSlidingWindowRateLimiter extends AbstractRateLimiter<SlidingWi
      *
      * @return 结果
      */
-    private long getCurrentTotal() {
-
-        // 当前时间
-        long now = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+    private long getCurrentTotal(long currentWindowTime) {
 
         // 子窗口大小
         long subTimeCycle = this.limitArgs.getSubTimeCycle();
 
         // 子窗口数量
         long cycleCount = this.limitArgs.getCycleCount();
-
-        // 当前子窗口时间
-        long currentWindowTime = now / subTimeCycle * subTimeCycle;
 
         // 开始子窗口时间
         long startWindowTime = currentWindowTime - (cycleCount - 1) * subTimeCycle;

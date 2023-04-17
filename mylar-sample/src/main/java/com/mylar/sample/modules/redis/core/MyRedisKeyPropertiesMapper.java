@@ -35,7 +35,7 @@ public class MyRedisKeyPropertiesMapper implements IRedisKeyPropertiesMapper {
     @Override
     public String mapToCacheType(String cacheKey) {
 
-        if (cacheKey.contains("local")) {
+        if (cacheKey.contains("limit")) {
             return "LOCAL";
         }
 

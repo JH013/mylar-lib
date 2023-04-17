@@ -30,6 +30,7 @@ public class LocalBlockingLeakyBucketRateLimiter extends AbstractRateLimiter<Lea
         super(limitKey, limitArgs);
         this.queue = new LinkedBlockingQueue<>((int) limitArgs.getBurstCapacity());
         this.millsLeakOne = 1000 / limitArgs.getLeakRate();
+        this.work();
     }
 
     // endregion

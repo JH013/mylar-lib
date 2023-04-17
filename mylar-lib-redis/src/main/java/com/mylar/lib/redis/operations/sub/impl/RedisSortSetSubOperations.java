@@ -169,7 +169,7 @@ public class RedisSortSetSubOperations extends AbstractRedisSubOperations implem
      */
     @Override
     public <T> void sortSetRemove(String cacheKey, List<T> values) {
-        this.getTemplate(cacheKey).opsForZSet().remove(cacheKey, values);
+        this.getTemplate(cacheKey).opsForZSet().remove(cacheKey, values.toArray());
     }
 
     /**

@@ -107,7 +107,8 @@ public class RedisConcurrentRateLimiter extends AbstractRedisRateLimiter<Concurr
     protected List<String> getArgs(int requestCount) {
         return Arrays.asList(
                 String.valueOf(this.limitArgs.getConcurrentCapacity()),
-                String.valueOf(Instant.now().getEpochSecond())
+                String.valueOf(Instant.now().getEpochSecond()),
+                String.valueOf(this.limitArgs.getTimeout())
         );
     }
 

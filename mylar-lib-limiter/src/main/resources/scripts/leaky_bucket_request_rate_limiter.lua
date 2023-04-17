@@ -65,7 +65,7 @@ end
 redis.call("SETEX", tokens_key, ttl, new_tokens)
 
 -- 更新时间戳键：令牌最后刷新时间
-redis.call("SETEX", tokens_key, ttl, now)
+redis.call("SETEX", timestamp_key, ttl, now)
 
 -- 返回结果
 return { allowed_num, capacity - new_tokens }

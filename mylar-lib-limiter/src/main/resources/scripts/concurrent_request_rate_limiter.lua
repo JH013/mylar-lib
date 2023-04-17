@@ -18,6 +18,12 @@ local capacity = tonumber(ARGV[1])
 -- 当前时间
 local now = tonumber(ARGV[2])
 
+-- 超时时间
+local timeout = tonumber(ARGV[3])
+
+-- 清除超时数据
+redis.call('zremrangebyscore', limit_key, 0, now - timeout)
+
 -- 获取执行中的请求数量
 local count = redis.call("zcard", limit_key)
 

@@ -19,6 +19,11 @@ public class ConcurrentRateLimitArgs implements IRateLimitArgs {
     private long concurrentCapacity;
 
     /**
+     * 超时时间（超时清除限流数据，避免未正常回调而遗留脏数据，单位：秒）
+     */
+    private long timeout;
+
+    /**
      * 校验限流参数
      */
     @Override
@@ -34,10 +39,12 @@ public class ConcurrentRateLimitArgs implements IRateLimitArgs {
      * 创建
      *
      * @param concurrentCapacity 限流上限（并发上限，同一时间最多多少请求处于执行中）
+     * @param timeout            超时时间（超时清除限流数据，避免未正常回调而遗留脏数据，单位：秒）
      */
-    public static ConcurrentRateLimitArgs create(long concurrentCapacity) {
+    public static ConcurrentRateLimitArgs create(long concurrentCapacity, long timeout) {
         ConcurrentRateLimitArgs args = new ConcurrentRateLimitArgs();
         args.concurrentCapacity = concurrentCapacity;
+        args.timeout = timeout;
         return args;
     }
 
@@ -68,6 +75,14 @@ public class ConcurrentRateLimitArgs implements IRateLimitArgs {
 
     public void setConcurrentCapacity(long concurrentCapacity) {
         this.concurrentCapacity = concurrentCapacity;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
 
     // endregion

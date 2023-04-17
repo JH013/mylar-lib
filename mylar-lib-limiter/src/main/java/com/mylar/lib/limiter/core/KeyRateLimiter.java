@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * 关键字限流器
@@ -197,7 +196,7 @@ public class KeyRateLimiter {
 
                 // 创建限流器实例
                 rateLimiter = limitStrategy.getLimiterClazz()
-                        .getDeclaredConstructor(String.class, IRateLimitArgs.class)
+                        .getDeclaredConstructor(String.class, limitArgs.getClass())
                         .newInstance(limitKey, limitArgs);
 
                 // 添加到缓存容器

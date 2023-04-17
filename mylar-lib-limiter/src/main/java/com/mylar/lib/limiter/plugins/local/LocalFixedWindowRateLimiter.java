@@ -61,7 +61,7 @@ public class LocalFixedWindowRateLimiter extends AbstractRateLimiter<FixedWindow
         }
 
         // 未超限：计数器累加，返回成功
-        if (this.counter + requestCount < this.limitArgs.getCapacity()) {
+        if (this.counter + requestCount <= this.limitArgs.getCapacity()) {
             this.counter += requestCount;
             return RateLimitResult.allow(this.limitArgs.getCapacity() - this.counter);
         }

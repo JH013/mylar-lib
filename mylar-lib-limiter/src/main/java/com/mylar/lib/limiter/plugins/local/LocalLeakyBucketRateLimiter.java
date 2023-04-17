@@ -25,7 +25,7 @@ public class LocalLeakyBucketRateLimiter extends AbstractRateLimiter<LeakyBucket
      */
     public LocalLeakyBucketRateLimiter(String limitKey, LeakyBucketRateLimitArgs limitArgs) {
         super(limitKey, limitArgs);
-        this.storedPermits = limitArgs.getBurstCapacity();
+        this.storedPermits = 0;
     }
 
     // endregion
