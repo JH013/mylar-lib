@@ -4,7 +4,7 @@ import com.mylar.lib.base.cryptography.plugins.MD5AndSHA1Cryptography;
 import com.mylar.lib.base.cryptography.plugins.MD5Cryptography;
 import com.mylar.lib.base.cryptography.plugins.MurMurHashCryptography;
 import com.mylar.lib.base.cryptography.plugins.SHA1Cryptography;
-import com.mylar.lib.base.data.EncryptionTypeEnum;
+import com.mylar.lib.base.data.enums.EncryptionTypeEnum;
 
 /**
  * 加解密管理器

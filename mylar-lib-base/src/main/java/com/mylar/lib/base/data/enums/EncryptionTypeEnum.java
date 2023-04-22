@@ -1,4 +1,4 @@
-package com.mylar.lib.base.data;
+package com.mylar.lib.base.data.enums;
 
 /**
  * 加解密类型

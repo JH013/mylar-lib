@@ -1,7 +1,7 @@
 package com.mylar.lib.base.utils;
 
 import com.mylar.lib.base.cryptography.CryptographyManager;
-import com.mylar.lib.base.data.EncryptionTypeEnum;
+import com.mylar.lib.base.data.enums.EncryptionTypeEnum;
 
 import java.nio.charset.StandardCharsets;
 
