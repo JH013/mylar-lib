@@ -9,6 +9,7 @@
 		<module>mylar-lib-job</module>
         <module>mylar-lib-thread</module>
         <module>mylar-lib-limiter</module>
+        <module>mylar-lib-queue</module>
     </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
